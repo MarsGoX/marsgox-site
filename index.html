@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MarsGoX 🚀 Funding Portal</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #ff4040;
+    }
+    .counter {
+      font-size: 2rem;
+      color: #ffd700;
+      margin: 20px 0;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      margin: 10px 5px;
+    }
+    input {
+      width: 60%;
+      max-width: 200px;
+    }
+    button {
+      background-color: #ff4040;
+      color: white;
+      cursor: pointer;
+    }
+    .status {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #00ff88;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚀 MarsGoX Mission</h1>
+  <p>Join the revolution. Support the first meme coin heading to Mars.</p>
+
+  <h2>🌐 Simulated Funding:</h2>
+  <div class="counter" id="fakeCounter">Ξ 274.33</div>
+
+  <h3>💸 Fund this project with real ETH:</h3>
+  <input type="number" id="amount" placeholder="Amount in ETH" />
+  <button onclick="sendETH()">Fund Now</button>
+
+  <div class="status" id="status"></div>
+
+  <script>
+    // Simulated counter
+    let fakeAmount = 274.33;
+    const fakeCounter = document.getElementById("fakeCounter");
+
+    setInterval(() => {
+      const increase = (Math.random() * 0.05).toFixed(3);
+      fakeAmount += parseFloat(increase);
+      fakeCounter.textContent = `Ξ ${fakeAmount.toFixed(2)}`;
+    }, 4000);
+
+    // Real ETH sending (requires MetaMask)
+    const walletAddress = "0x77a3405eb20c0B02194C7d7EF8BE1269b5c1183D";
+
+    async function sendETH() {
+      const status = document.getElementById("status");
+      const ethAmount = document.getElementById("amount").value;
+
+      if (!window.ethereum) {
+        status.textContent = "❌ MetaMask not found!";
+        return;
+      }
+
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const from = accounts[0];
+
+        await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from,
+            to: walletAddress,
+            value: (parseFloat(ethAmount) * 1e18).toString(16),
+          }],
+        });
+
+        status.textContent = `✅ Thank you! Transaction submitted.`;
+      } catch (error) {
+        console.error(error);
+        status.textContent = "❌ Transaction failed or cancelled.";
+      }
+    }
+  </script>
+
+</body>
+  </html>
